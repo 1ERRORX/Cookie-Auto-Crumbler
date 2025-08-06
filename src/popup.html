@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Auto Crumbler</title>
+  <style>
+    :root {
+      --primary: #ff4b4b;
+      --secondary: #5755fe;
+      --background: #1e1e2e;
+      --card: #2e2e3e;
+      --text: #e0e0e0;
+      --success: #4caf50;
+    }
+    
+    body {
+      width: 300px;
+      padding: 12px;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    h1 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      color: var(--primary);
+      text-align: center;
+    }
+    
+    .section {
+      background-color: var(--card);
+      border-radius: 6px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    button {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    
+    button:hover {
+      opacity: 0.9;
+    }
+    
+    button.danger {
+      background-color: var(--primary);
+    }
+    
+    button.success {
+      background-color: var(--success);
+    }
+    
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #3a3a4a;
+      color: var(--text);
+      box-sizing: border-box;
+      margin-bottom: 8px;
+    }
+    
+    .whitelist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: #3a3a4a;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .whitelist-url {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-right: 8px;
+    }
+    
+    .whitelist-actions {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .whitelist-actions button {
+      margin: 0;
+      padding: 4px 8px;
+      font-size: 12px;
+      width: auto;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 12px;
+    }
+    
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom: 2px solid var(--secondary);
+      font-weight: bold;
+    }
+
+    .about-text {
+    padding: 8px;
+    line-height: 1.5;
+    font-size: 13px;
+    }
+
+    .about-text p {
+    margin: 8px 0;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .toggle-label {
+      font-size: 13px;
+      margin-right: 8px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #3a3a4a;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: var(--success);
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 8px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #3a3a4a;
+      color: var(--text);
+      box-sizing: border-box;
+      margin-bottom: 8px;
+      resize: vertical;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .instructions {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    .warning-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--primary);
+    }
+    
+    .warning-title {
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="logo.png" alt="Logo" class="logo" id="logo">
+      <h1>Cookie Auto Crumbler</h1>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" id="main-tab">Main</div>
+      <div class="tab" id="bulk-tab">List links</div>
+      <div class="tab" id="whitelist-tab">Whitelist</div>
+      <div class="tab" id="about-tab">About</div>
+    </div>
+    
+    <div id="main-content" class="section">
+      <h2 class="section-title">Current Site</h2>
+      <button id="add-current" class="success">Add current site to Whitelist</button>
+      <button id="remove-current" class="danger">Remove current site from Whitelist</button>
+
+      <div class="toggle-container">
+        <span class="toggle-label">Enable autoclean</span>
+        <label class="toggle-switch">
+        <input type="checkbox" id="autoclean-toggle">
+        <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <h2 class="section-title">Manual Add</h2>
+      <input type="text" id="manual-url" placeholder="Enter URL (e.g. https://example.com)">
+      <button id="add-manual" class="success">Add URL to Whitelist</button>
+      <h2 class="section-title">System</h2>
+      <button id="clear-all-cache" class="danger">Clear ALL Cache</button>
+      <div class="warning-section">
+        <div class="warning-title">WARNING! Ignoring the White List</div>
+        <button id="wipe-all-cookies" class="danger">Wipe ALL cookies of ALL sites</button>
+        <button id="wipe-all-data" class="danger">Wipe ALL data of ALL sites</button>
+      </div>
+    </div>
+    
+    <div id="whitelist-content" class="section hidden">
+      <h2 class="section-title">Whitelisted Sites</h2>
+      <div id="whitelist-container"></div>
+    </div>
+    <div id="about-content" class="section hidden">
+        <h2 class="section-title">About Cookie Auto Crumbler</h2>
+        <div class="about-text"><p>Version: 1.0.0 beta</p><p>This extension automatically clears the cache and cookies when closing the tab (if you have two tabs open with the same website, cookies and cache will not be cleared). If there are errors or you want to change or add something, please send feedback to my:</p>
+          <p>email: oneerrorx@gmail.com</p>
+          <p>github: https://github.com/1ERRORX</p>
+          <p>The github provides the full source code of the extension, and you can view all its functions. Have fun using the extension, I am glad to hear your ratings and comments.</p>
+          <p>Your 1ERRORX.</p>
+        </div>
+    </div>
+    <div id="bulk-content" class="section hidden">
+      <h2 class="section-title">Add list links into Whitelist</h2>
+      <div class="instructions">Enter URLs, one per line (e.g. https://example.com)</div>
+      <textarea id="bulk-urls" placeholder="https://www.youtube.com&#10;https://www.google.com"></textarea>
+      <button id="add-bulk" class="success">Add All URLs</button>
+    </div>
+  </div>
+  
+  <script src="popup.bundle.js"></script>
+</body>
+</html>

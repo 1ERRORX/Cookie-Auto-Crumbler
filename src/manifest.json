@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Cookie Auto Crumbler",
+  "version": "1.0",
+  "description": "Clear cookies and website cache while closing the tab!",
+
+  "action": {"default_popup": "popup.html", "default_icon": {"48": "icons/icon48.png", "128": "icons/icon128.png"}},
+
+  "icons": {"48": "icons/icon48.png", "128": "icons/icon128.png"},
+  "permissions": 
+  [
+    "cookies",
+    "storage",
+    "tabs",
+    "browsingData",
+    "activeTab",
+    "scripting"
+  ],
+
+  "host_permissions": 
+  [
+    "*://*/*",
+    "<all_urls>"
+  ],
+
+  "background": 
+  {
+    "service_worker": "background.bundle.js"
+  }
+}

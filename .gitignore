@@ -1,0 +1,7 @@
+node_modules/
+Cookie Auto Crumbler Build/
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
